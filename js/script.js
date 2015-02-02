@@ -21,6 +21,22 @@ function loadData() {
 
 
     // YOUR CODE GOES HERE!
+    var URL = "http://api.nytimes.com/svc/search/v2/articlesearch.json?q='%data%'&api-key=4fae68afa794a24071e2ef8eec4edf56:1:71156901";
+    var nytURL = URL.replace("%data%", fullLocation);
+    $.getJSON(nytURL, function(data){
+        console.log(data);
+        var items = [];
+        var nytData = data.response.docs;
+        $.each(nytData, function(key,val) {
+            //<li id='key'><a href='val.web_url'>val.snippet</a></li>;
+            if(val.snippet)
+                items.push("<li id='" + key + "'><a href='" + val.web_url + "'>" + val.snippet + "</a></li>");
+        });
+        var listItems = items.join("");
+
+        $("#nytimes-articles").append(listItems);
+
+    });
 
     return false;
 };
