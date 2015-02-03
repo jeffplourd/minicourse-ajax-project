@@ -21,21 +21,21 @@ function loadData() {
 
 
     // YOUR CODE GOES HERE!
-    var URL = "http://api.nytimes.com/svc/search/v2/articlesearch.json?q='%data%'&api-key=4fae68afa794a24071e2ef8eec4edf56:1:71156901";
-    var nytURL = URL.replace("%data%", fullLocation);
-    $.getJSON(nytURL, function(data){
+    var nytimesUrl = "http://api.nytimes.com/svc/search/v2/articlesearch.json?q=" + cityLocation + "&sort=newest&api-key=4fae68afa794a24071e2ef8eec4edf56:1:71156901";
+    $.getJSON(nytimesUrl, function(data){
         console.log(data);
-        var items = [];
-        var nytData = data.response.docs;
-        $.each(nytData, function(key,val) {
-            //<li id='key'><a href='val.web_url'>val.snippet</a></li>;
-            if(val.snippet)
-                items.push("<li id='" + key + "'><a href='" + val.web_url + "'>" + val.snippet + "</a></li>");
-        });
-        var listItems = items.join("");
 
-        $("#nytimes-articles").append(listItems);
+        $nytHeaderElem.text('New York Times Articles About ' + cityLocation);
 
+        articles = data.response.docs;
+
+        for (var i = 0; i < articles.length; i++) {
+            var article = articles[i];
+            $nytElem.append('<li class="article">' + '<a href="' + article.web_url + '">' + article.headline.main + '</a>' + '<p>' + article.snippet + '</p>' + '</li>');
+        };
+
+    }).error(function(e){
+        nytHeaderElem.text('New York Times Articles Could Not Be Loaded');
     });
 
     return false;
