@@ -38,6 +38,29 @@ function loadData() {
         nytHeaderElem.text('New York Times Articles Could Not Be Loaded');
     });
 
+    //I'm going to create a JSON.ajax() request
+    var wikiUrl = "http://en.wikipedia.org/w/api.php?action=opensearch&search=" + cityLocation + "&format=json&callback=wikiCallback";
+
+    var wikiRequestTimeout = setTimeout(function(){
+        $wikiElem.text("failed to get wikipedia resources");
+    }, 8000);
+
+    $.ajax({
+        url: wikiUrl,
+        dataType: "jsonp",
+        success: function ( response ) {
+            console.log(response);
+            var articleList = response[1];
+            for(var i = 0; i < articleList.length; i++) {
+                var articleStr = articleList[i];
+                var url = "http://en.wikipedia.org/wiki/" + articleStr;
+                $wikiElem.append('<li><a href="' + url + '">' + articleStr + '</a></li>');
+            };
+
+            clearTimeout(wikiRequestTimeout);
+        }
+    });
+
     return false;
 };
 
